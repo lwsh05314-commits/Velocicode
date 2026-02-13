@@ -1,0 +1,27 @@
+name: Velocicode-Build-System
+on: [push] # This runs every time you save code on your phone
+
+jobs:
+  build:
+    runs-on: windows-latest # Using a 2026 Windows Runner
+    
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET (For UI)
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Setup MSBuild (For C++ Core)
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build Velocicode EXE
+      run: msbuild Velocicode.sln /p:Configuration=Release
+
+    - name: Upload Finished Executor
+      uses: actions/upload-artifact@v4
+      with:
+        name: Velocicode-Build
+        path: bin/Release/ # This is where your .exe will be
